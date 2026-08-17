@@ -6,6 +6,8 @@ from textnode import (
     extract_markdown_images,
     extract_markdown_links,
     split_nodes_delimiter,
+    split_nodes_image,
+    split_nodes_link,
     text_node_to_html_node,
 )
 
@@ -154,6 +156,41 @@ class TestMarkdownImagesAndLinksExtraction(unittest.TestCase):
                 ("another link", "https://www.example.org"),
             ],
             links,
+        )
+
+
+class TestSplitNodesImagesAndLinks(unittest.TestCase):
+    def test_split_nodes_image(self):
+        old_nodes = [
+            TextNode(
+                "This is text with a ![rick roll](https://i.imgur.com/aKaOqIh.gif)",
+                TextType.TEXT,
+            )
+        ]
+        new_nodes = split_nodes_image(old_nodes)
+        self.assertListEqual(
+            [
+                TextNode("This is text with a ", TextType.TEXT),
+                TextNode(
+                    "rick roll", TextType.IMAGE, "https://i.imgur.com/aKaOqIh.gif"
+                ),
+            ],
+            new_nodes,
+        )
+
+    def test_split_nodes_link(self):
+        old_nodes = [
+            TextNode(
+                "This is text with a [link](https://www.example.com)", TextType.TEXT
+            )
+        ]
+        new_nodes = split_nodes_link(old_nodes)
+        self.assertListEqual(
+            [
+                TextNode("This is text with a ", TextType.TEXT),
+                TextNode("link", TextType.LINK, "https://www.example.com"),
+            ],
+            new_nodes,
         )
 
 
