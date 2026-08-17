@@ -1,4 +1,6 @@
 from enum import Enum
+from typing import override
+
 from htmlnode import LeafNode
 
 
@@ -12,11 +14,17 @@ class TextType(Enum):
 
 
 class TextNode:
+
+    text: str
+    text_type: TextType
+    url: str | None
+
     def __init__(self, text: str, text_type: TextType, url: str | None = None):
         self.text = text
         self.text_type = text_type
         self.url = url
 
+    @override
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, TextNode):
             return False
@@ -27,6 +35,7 @@ class TextNode:
                 self.url == other.url
         )
 
+    @override
     def __repr__(self) -> str:
         return f"TextNode({self.text}, {self.text_type.value}, {self.url})"
 
@@ -49,3 +58,41 @@ def text_node_to_html_node(text_node: TextNode) -> LeafNode:
             raise ValueError("invalid URL")
         return LeafNode("img", "", {"src": text_node.url, "alt": text_node.text})
     raise ValueError(f"invalid text type: {text_node.text_type}")
+
+
+def split_nodes_delimiter(old_nodes: list[TextNode], delimeter: str, text_type: TextType) -> list[TextNode]:
+    new_nodes: list[TextNode] = []
+
+    for node in old_nodes:
+        if node.text_type != TextType.TEXT:
+            new_nodes.append(node)
+            continue
+
+        splitted_node_texts = node.text.split(delimeter)
+        if len(splitted_node_texts) % 2 == 0:
+            raise ValueError("invalid markdown, formatted section not closed")
+
+        split_nodes: list[TextNode] = []
+
+        for i, n in enumerate(splitted_node_texts):
+            if n == "":
+                continue
+            if i % 2 == 0:
+                split_nodes.append(TextNode(n, TextType.TEXT))
+            else:
+                split_nodes.append(TextNode(n, text_type))
+
+        new_nodes.extend(split_nodes)
+
+    return new_nodes
+
+
+
+old_nodes = [
+    TextNode("This is ", TextType.TEXT),
+    TextNode("already bold", TextType.BOLD),
+    TextNode(" and this has `code` in it", TextType.TEXT),
+]
+
+new_nodes = split_nodes_delimiter(old_nodes, "`", TextType.CODE)
+print(new_nodes)
