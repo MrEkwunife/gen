@@ -1,6 +1,13 @@
 import unittest
 
-from textnode import TextNode, TextType, split_nodes_delimiter, text_node_to_html_node
+from textnode import (
+    TextNode,
+    TextType,
+    extract_markdown_images,
+    extract_markdown_links,
+    split_nodes_delimiter,
+    text_node_to_html_node,
+)
 
 
 class TestTextNode(unittest.TestCase):
@@ -123,6 +130,30 @@ class TestSplitNodeDelimeter(unittest.TestCase):
                 TextNode(" word", TextType.TEXT),
             ],
             new_nodes,
+        )
+
+
+class TestMarkdownImagesAndLinksExtraction(unittest.TestCase):
+    def test_extract_markdown_images(self):
+        text = "This is text with a ![rick roll](https://i.imgur.com/aKaOqIh.gif) and ![obi wan](https://i.imgur.com/fJRm4Vk.jpeg)"
+        images = extract_markdown_images(text)
+        self.assertListEqual(
+            [
+                ("rick roll", "https://i.imgur.com/aKaOqIh.gif"),
+                ("obi wan", "https://i.imgur.com/fJRm4Vk.jpeg"),
+            ],
+            images,
+        )
+
+    def test_extract_markdown_links(self):
+        text = "This is text with a [link](https://www.example.com) and [another link](https://www.example.org)"
+        links = extract_markdown_links(text)
+        self.assertListEqual(
+            [
+                ("link", "https://www.example.com"),
+                ("another link", "https://www.example.org"),
+            ],
+            links,
         )
 
 

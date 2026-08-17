@@ -1,3 +1,4 @@
+import re
 from enum import Enum
 from typing import override
 
@@ -88,11 +89,11 @@ def split_nodes_delimiter(
     return new_nodes
 
 
-old_nodes = [
-    TextNode("This is ", TextType.TEXT),
-    TextNode("already bold", TextType.BOLD),
-    TextNode(" and this has `code` in it", TextType.TEXT),
-]
+def extract_markdown_images(text: str):
+    images = re.findall(r"!\[([^\[\]]*)\]\(([^\(\)]*)\)", text)
+    return images
 
-new_nodes = split_nodes_delimiter(old_nodes, "`", TextType.CODE)
-print(new_nodes)
+
+def extract_markdown_links(text: str):
+    links = re.findall(r"\[([^\[\]]*)\]\(([^\(\)]*)\)", text)
+    return links
