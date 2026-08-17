@@ -1,6 +1,11 @@
 class HtmlNode:
-    def __init__(self, tag: str | None = None, value: str | None = None, children: list[object] | None = None,
-                 props: dict[str, str] | None = None):
+    def __init__(
+        self,
+        tag: str | None = None,
+        value: str | None = None,
+        children: list[object] | None = None,
+        props: dict[str, str] | None = None,
+    ):
         self.tag = tag
         self.value = value
         self.children = children
@@ -20,7 +25,9 @@ class HtmlNode:
 
 
 class LeafNode(HtmlNode):
-    def __init__(self, tag: str | None, value: str, props: dict[str, str] | None = None):
+    def __init__(
+        self, tag: str | None, value: str, props: dict[str, str] | None = None
+    ):
         super().__init__(tag, value, None, props=props)
 
     def to_html(self) -> str:
@@ -37,9 +44,13 @@ class LeafNode(HtmlNode):
 
 
 class ParentNode(HtmlNode):
-    def __init__(self, tag: str | None, children: list[HtmlNode], props: dict[str, str] | None = None):
+    def __init__(
+        self,
+        tag: str | None,
+        children: list[HtmlNode],
+        props: dict[str, str] | None = None,
+    ):
         super().__init__(tag, None, children, props)
-
 
     def to_html(self) -> str:
         if self.tag is None or self.tag == "":

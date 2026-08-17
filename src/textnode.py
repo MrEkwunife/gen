@@ -14,7 +14,6 @@ class TextType(Enum):
 
 
 class TextNode:
-
     text: str
     text_type: TextType
     url: str | None
@@ -30,9 +29,9 @@ class TextNode:
             return False
 
         return (
-                self.text == other.text and
-                self.text_type == other.text_type and
-                self.url == other.url
+            self.text == other.text
+            and self.text_type == other.text_type
+            and self.url == other.url
         )
 
     @override
@@ -60,7 +59,9 @@ def text_node_to_html_node(text_node: TextNode) -> LeafNode:
     raise ValueError(f"invalid text type: {text_node.text_type}")
 
 
-def split_nodes_delimiter(old_nodes: list[TextNode], delimeter: str, text_type: TextType) -> list[TextNode]:
+def split_nodes_delimiter(
+    old_nodes: list[TextNode], delimeter: str, text_type: TextType
+) -> list[TextNode]:
     new_nodes: list[TextNode] = []
 
     for node in old_nodes:
@@ -85,7 +86,6 @@ def split_nodes_delimiter(old_nodes: list[TextNode], delimeter: str, text_type: 
         new_nodes.extend(split_nodes)
 
     return new_nodes
-
 
 
 old_nodes = [

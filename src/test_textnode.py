@@ -1,5 +1,6 @@
 import unittest
-from textnode import TextNode, TextType, text_node_to_html_node, split_nodes_delimiter
+
+from textnode import TextNode, TextType, split_nodes_delimiter, text_node_to_html_node
 
 
 class TestTextNode(unittest.TestCase):
@@ -10,7 +11,9 @@ class TestTextNode(unittest.TestCase):
 
     def test_ne(self):
         node = TextNode("This is a text node", TextType.BOLD)
-        node2 = TextNode("This is a link text node", TextType.LINK, "https://www.google.com")
+        node2 = TextNode(
+            "This is a link text node", TextType.LINK, "https://www.google.com"
+        )
         self.assertNotEqual(node, node2)
 
     def test_url(self):
@@ -40,7 +43,6 @@ class TestTextNodeToHTMLNode(unittest.TestCase):
         html_node = text_node_to_html_node(node)
         self.assertEqual(html_node.tag, "b")
         self.assertEqual(html_node.value, "This is bold")
-
 
 
 class TestSplitNodeDelimeter(unittest.TestCase):
@@ -122,7 +124,6 @@ class TestSplitNodeDelimeter(unittest.TestCase):
             ],
             new_nodes,
         )
-
 
 
 if __name__ == "__main__":
