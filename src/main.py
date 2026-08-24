@@ -1,15 +1,19 @@
 import os
 import shutil
+import sys
 
 from gencontent import generate_pages_recursive
 
 dir_path_static = "./static"
-dir_path_public = "./public"
+dir_path_public = "./docs"
 dir_path_content = "./content"
 template_path = "./template.html"
+default_basepath = "/"
 
 
 def main() -> None:
+    basepath = sys.argv[1] if len(sys.argv) > 1 else default_basepath
+
     print("Deleting public directory...")
     if os.path.exists(dir_path_public):
         shutil.rmtree(dir_path_public)
@@ -18,7 +22,7 @@ def main() -> None:
     copy_files_recursive(dir_path_static, dir_path_public)
 
     print("Generating pages...")
-    generate_pages_recursive(dir_path_content, template_path, dir_path_public)
+    generate_pages_recursive(dir_path_content, template_path, dir_path_public, basepath)
 
 
 def copy_files_recursive(source_dir_path: str, dest_dir_path: str) -> None:
